@@ -4,13 +4,7 @@ class board:
         self.rows = 8
         self.columns = 8
         self.positions = positions
-
-    def add_piece(self, piece, position):
-        if position in self.positions:
-            piece.position = position
-            self.positions.remove(position)
-        else:
-            raise ValueError
+        self.pieces = positions
 
     def show_board(self):
         counter = 0
@@ -21,6 +15,18 @@ class board:
                 counter = y
             print(f"{value.name} ", end="")
         print()
+    def move_piece(self, piece, position):
+        if position in piece.relative_moves:
+            self.positions[position] = piece
+            self.positions[piece.position] = empty()
+        else: 
+            raise ValueError 
+            
+    def update_position(self):
+        for i in self.positions.values():
+            ...
+            
+            
 
 
 # father class
@@ -28,6 +34,8 @@ class piece:
     def __init__(self, color, id):
         self.color = color
         self.id = id
+        _,x,y = id
+        self.position = (x,y)
 
 
 # ----
@@ -97,7 +105,7 @@ class king(piece):
 
 
 class empty(piece):
-    def __init__(self, color, id):
+    def __init__(self, color = "any", id=("empty", 1,2)):
         super().__init__(color, id)
         self.name = "."
 
