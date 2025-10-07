@@ -52,19 +52,34 @@ class pawn(piece):
         moves = []
         correct = moves[::]
         # avanzar
-        if tablero.positions[(x, y + 1)].color == any:
-            correct.append(tablero.positions[x, y + 1].position)
-        # capturar
-        if (
-            tablero.positions[(x + 1, y + 1)].color != "any"
-            and tablero.positions[(x + 1, y + 1)].color != self.color
-        ):
-            correct.append(tablero.positions[(x + 1, y + 1)].position)
-        if (
-            tablero.positions[(x - 1, y + 1)].color != "any"
-            and tablero.positions[(x + 1, y + 1)].color != self.color
-        ):
-            correct.append(tablero.positions[(x - 1, y + 1)].position)
+        if self.color == "white":
+            if tablero.positions[(x, y + 1)].color == "any":
+                correct.append(tablero.positions[x, y + 1].position)
+            # capturar
+            if (
+                tablero.positions[(x + 1, y + 1)].color != "any"
+                and tablero.positions[(x + 1, y + 1)].color != self.color
+            ):
+                correct.append(tablero.positions[(x + 1, y + 1)].position)
+            if (
+                tablero.positions[(x - 1, y + 1)].color != "any"
+                and tablero.positions[(x + 1, y + 1)].color != self.color
+            ):
+                correct.append(tablero.positions[(x - 1, y + 1)].position)
+        elif self.color == "black":
+            if tablero.positions[(x, y - 1)].color == "any":
+                correct.append(tablero.positions[x, y - 1].position)
+            # capturar
+            if (
+                tablero.positions[(x + 1, y - 1)].color != "any"
+                and tablero.positions[(x + 1, y - 1)].color != self.color
+            ):
+                correct.append(tablero.positions[(x + 1, y - 1)].position)
+            if (
+                tablero.positions[(x - 1, y - 1)].color != "any"
+                and tablero.positions[(x + 1, y - 1)].color != self.color
+            ):
+                correct.append(tablero.positions[(x - 1, y - 1)].position)
 
         return correct
 
@@ -108,53 +123,31 @@ class bishop(piece):
         elif color == "black":
             self.name = "b"
 
-    def relative_moves(self, board): 
+    def _scan_position(self, board, deltas: tuple):
+        dx, dy = deltas
         _, x, y = self.id
         valid_moves = []
 
-        while x > 0 and y > 0:
-            x, y = x -1, y -1
-            if board.positions[(x,y)].color == self.color:
+        while 0 <= x <= 8 and 0 <= y <= 8:
+            x, y = x + dx, y + dy
+
+            if board.positions[(x, y)].color == self.color:
                 break
-            elif board.positions[(x,y)].color == "any":
-                valid_moves.append((x,y))
-            else :
-                valid_moves.append((x,y))
-                break
-        _, x, y = self.id
-        
-        while x < 9 and y > 0:
-            x, y = x +1, y -1
-            if board.positions[(x,y)].color == self.color:
-                break
-            elif board.positions[(x,y)].color == "any":
-                valid_moves.append((x,y))
-            else :
-                valid_moves.append((x,y))
-                break
-        _, x, y = self.id
-        while x < 9 and y < 9:
-            x, y = x +1, y +1
-            if board.positions[(x,y)].color == self.color:
-                break
-            elif board.positions[(x,y)].color == "any":
-                valid_moves.append((x,y))
-            else :
-                valid_moves.append((x,y))
-                break
-        _, x, y = self.id
-        while x > 0 and y < 9:
-            x, y = x -1, y +1
-            if board.positions[(x,y)].color == self.color:
-                break
-            elif board.positions[(x,y)].color == "any":
-                valid_moves.append((x,y))
-            else :
-                valid_moves.append((x,y))
+            elif board.positions[(x, y)].color == "any":
+                valid_moves.append((x, y))
+            else:
+                valid_moves.append((x, y))
                 break
         return valid_moves
-                
-        
+
+    def relative_moves(self, board):
+        valid_moves = []
+        permutations = [(-1, -1), (1, -1), (1, 1), (-1, 1)]
+        for i in permutations:
+            aux = self._scan_position(board, i)
+            valid_moves.extend(aux)
+
+        return valid_moves
 
 
 class rook(piece):
@@ -165,6 +158,31 @@ class rook(piece):
         elif color == "black":
             self.name = "r"
 
+    def _scan_position(self, board, deltas: tuple):
+        dx, dy = deltas
+        _, x, y = self.id
+        valid_moves = []
+        x, y = x + dx, y + dy
+        while 1 <= x < 9 and 1 <= y < 9:
+            if board.positions[(x, y)].color == self.color:
+                break
+            elif board.positions[(x, y)].color == "any":
+                valid_moves.append((x, y))
+            else:
+                valid_moves.append((x, y))
+                break
+            x, y = x + dx, y + dy
+        return valid_moves
+
+    def relative_moves(self, board):
+        valid_moves = []
+        permutations = [(1, 0), (-1, 0), (0, 1), (0, -1)]
+        for i in permutations:
+            aux = self._scan_position(board, i)
+            valid_moves.extend(aux)
+
+        return valid_moves
+
 
 class queen(piece):
     def __init__(self, color, id):
@@ -174,6 +192,40 @@ class queen(piece):
         elif color == "black":
             self.name = "q"
 
+    def _scan_position(self, board, deltas: tuple):
+        dx, dy = deltas
+        _, x, y = self.id
+        valid_moves = []
+        x, y = x + dx, y + dy
+        while 1 <= x < 9 and 1 <= y < 9:
+            if board.positions[(x, y)].color == self.color:
+                break
+            elif board.positions[(x, y)].color == "any":
+                valid_moves.append((x, y))
+            else:
+                valid_moves.append((x, y))
+                break
+            x, y = x + dx, y + dy
+        return valid_moves
+
+    def relative_moves(self, board):
+        valid_moves = []
+        permutations = [
+            (1, 0),
+            (-1, 0),
+            (0, 1),
+            (0, -1),
+            (-1, -1),
+            (1, -1),
+            (1, 1),
+            (-1, 1),
+        ]
+        for i in permutations:
+            aux = self._scan_position(board, i)
+            valid_moves.extend(aux)
+
+        return valid_moves
+
 
 class king(piece):
     def __init__(self, color, id):
@@ -182,6 +234,25 @@ class king(piece):
             self.name = "K"
         elif color == "black":
             self.name = "k"
+
+    def relative_moves(self, board):
+        _, x, y = self.id
+        permutations = [
+            (x, y + 1),
+            (x, y - 1),
+            (x + 1, y + 1),
+            (x - 1, y + 1),
+            (x + 1, y - 1),
+            (x - 1, y - 1),
+            (x + 1, y),
+            (x - 1, y),
+        ]
+        correct = []
+        for i in permutations:
+            if board.positions[i].color == "any":
+                correct.append(board.positions[i].position)
+
+        return correct
 
 
 class empty(piece):

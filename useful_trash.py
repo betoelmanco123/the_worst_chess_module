@@ -40,7 +40,7 @@ def initial_postions():
             # empty
             else:
                 positions[(x, y)] = empty(color="any", id=("empty", x, y))
-    positions[(4, 4)] = bishop(color="white", id=("bishop", 4, 4))
+    positions[(4, 6)] = king(color="white", id=("king", 4, 6))
     return positions
 
 
