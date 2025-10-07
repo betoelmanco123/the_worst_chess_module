@@ -28,13 +28,39 @@ class board:
             ...
 
 
-# father class
-class piece:
-    def __init__(self, color, id):
+# this class is able to have 2 possible states
+# 1. store a object from the class piece
+# 2. being empty
+class square:
+    def __init__(self, color, coords: tuple, object_piece=None):
         self.color = color
+        self.piece = object_piece
+        self.position = coords
+        if object_piece:
+            self.state = True
+        else:
+            self.state = False
+    
+    
+
+
+# father class
+class piece():
+    def __init__(self, color, id):
+
+
+        self.color = color
+
         self.id = id
         _, x, y = id
         self.position = (x, y)
+
+
+class empty(piece):
+    def __init__(self, color="any", id=("empty", 1, 2)):
+        super().__init__(color, id)
+
+        self.name = "."
 
 
 # ----
@@ -46,6 +72,7 @@ class pawn(piece):
         elif color == "black":
             self.name = "p"
 
+    # moves that the piece is able to do
     def relative_moves(self, tablero: board):
         _, x, y = self.id
         pieces = tablero.positions.values()
@@ -95,6 +122,7 @@ class knigth(piece):
     def relative_moves(self, board):
         _, x, y = self.id
         valid_moves = []
+        # al the posible moves
         moves = [
             (x + 2, y + 1),
             (x + 2, y - 1),
@@ -106,13 +134,12 @@ class knigth(piece):
             (x + 1, y + 2),
             (x - 1, y - 2),
         ]
+        # cleanning the moves that are not allowed for obstructions
         for move_x, move_y in moves:
             if 1 <= move_x <= 8 and 1 <= move_y <= 8:
                 if board.positions[(move_x, move_y)].color != self.color:
                     valid_moves.append((move_x, move_y))
-        print(valid_moves)
         return valid_moves
-        # (x +- 3, y +- 1), (x +- 1, y +- 3)
 
 
 class bishop(piece):
@@ -123,6 +150,8 @@ class bishop(piece):
         elif color == "black":
             self.name = "b"
 
+    # scanning the posible postions that are avaible in the direction
+    # defined by delta x and delta y
     def _scan_position(self, board, deltas: tuple):
         dx, dy = deltas
         _, x, y = self.id
@@ -141,6 +170,7 @@ class bishop(piece):
         return valid_moves
 
     def relative_moves(self, board):
+        # going trougth all the variations of deltas that are useful for us
         valid_moves = []
         permutations = [(-1, -1), (1, -1), (1, 1), (-1, 1)]
         for i in permutations:
@@ -163,7 +193,7 @@ class rook(piece):
         _, x, y = self.id
         valid_moves = []
         x, y = x + dx, y + dy
-        while 1 <= x < 9 and 1 <= y < 9:
+        while 1 <= x <= 8 and 1 <= y <= 8:
             if board.positions[(x, y)].color == self.color:
                 break
             elif board.positions[(x, y)].color == "any":
@@ -197,7 +227,7 @@ class queen(piece):
         _, x, y = self.id
         valid_moves = []
         x, y = x + dx, y + dy
-        while 1 <= x < 9 and 1 <= y < 9:
+        while 1 <= x <= 8 and 1 <= y <= 8:
             if board.positions[(x, y)].color == self.color:
                 break
             elif board.positions[(x, y)].color == "any":
@@ -253,12 +283,6 @@ class king(piece):
                 correct.append(board.positions[i].position)
 
         return correct
-
-
-class empty(piece):
-    def __init__(self, color="any", id=("empty", 1, 2)):
-        super().__init__(color, id)
-        self.name = "."
 
 
 def main(): ...

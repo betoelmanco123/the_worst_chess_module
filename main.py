@@ -9,7 +9,7 @@ def main():
     tablero.show_board()
     place = tablero.pieces
     for i in place.values():
-        if i.id == ("king", 4, 6):
+        if i.id == ("pawn", 4, 6):
             print(i.relative_moves(tablero))
             for k in i.relative_moves(tablero):
                 test = empty("test")
