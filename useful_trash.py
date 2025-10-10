@@ -39,8 +39,8 @@ def initial_postions():
                     positions[(x, y)] = king(color="white", id=("king", x, y))
             # empty
             else:
-                positions[(x, y)] = empty(color="any", id=("empty", x, y))
-    positions[(4, 6)] = pawn(color="black", id=("pawn", 4, 6))
+                positions[(x, y)] = None
+
     return positions
 
 
