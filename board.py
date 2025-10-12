@@ -3,7 +3,7 @@ class PositionError(Exception):
         super().__init__(mensaje)
         self.codigo = codigo
 
-class board:
+class Board:
     def __init__(self, positions: dict):
         self.squares = 64
         self.rows = 8
@@ -46,7 +46,7 @@ class board:
 # 2. being empty
 
 
-class square:
+class Square:
     def __init__(self, color, coords: tuple, object_piece=None):
         self.color = color
         self.piece = object_piece
@@ -58,7 +58,7 @@ class square:
 
 
 # father class
-class piece:
+class Piece:
     def __init__(self, color, id):
 
         self.color = color
@@ -71,7 +71,7 @@ class piece:
         
 
 
-class empty(piece):
+class empty(Piece):
     def __init__(self, color="any", id=("empty", 1, 2)):
         super().__init__(color, id)
 
@@ -79,7 +79,7 @@ class empty(piece):
 
 
 # ----
-class pawn(piece):
+class Pawn(Piece):
     def __init__(self, color, id):
         super().__init__(color, id)
         if color == "white":
@@ -88,7 +88,7 @@ class pawn(piece):
             self.name = "p"
 
     # moves that the piece is able to do
-    def relative_moves(self, tablero: board):
+    def relative_moves(self, tablero: Board):
         _, x, y = self.id
         moves = []
 
@@ -119,7 +119,7 @@ class pawn(piece):
         return moves
 
 
-class knigth(piece):
+class Knigth(Piece):
     def __init__(self, color, id):
         super().__init__(color, id)
         if color == "white":
@@ -152,7 +152,7 @@ class knigth(piece):
         return valid_moves
 
 
-class bishop(piece):
+class Bishop(Piece):
     def __init__(self, color, id):
         super().__init__(color, id)
         if color == "white":
@@ -190,7 +190,7 @@ class bishop(piece):
         return valid_moves
 
 
-class rook(piece):
+class Rook(Piece):
     def __init__(self, color, id):
         super().__init__(color, id)
         if color == "white":
@@ -224,7 +224,7 @@ class rook(piece):
         return valid_moves
 
 
-class queen(piece):
+class Queen(Piece):
     def __init__(self, color, id):
         super().__init__(color, id)
         if color == "white":
@@ -267,7 +267,7 @@ class queen(piece):
         return valid_moves
 
 
-class king(piece):
+class King(Piece):
     def __init__(self, color, id):
         super().__init__(color, id)
         if color == "white":

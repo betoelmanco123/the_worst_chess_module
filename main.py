@@ -5,7 +5,7 @@ from board import *
 def main():
     positions = initial_postions()
 
-    tablero = board(positions)
+    tablero = Board(positions)
     tablero.show_board()
     place = tablero.pieces
 
