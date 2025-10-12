@@ -11,7 +11,7 @@ def main():
 
     tablero.show_board()
     
-    print(tablero.move_piece(tablero.pieces[2,1], (3,3), tablero))
+    print(tablero.move_piece(tablero.pieces[1,0], (2,2), tablero))
     tablero.show_board()
 
 if __name__ == "__main__":

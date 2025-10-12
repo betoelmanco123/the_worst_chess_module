@@ -3,37 +3,37 @@ from board import *
 
 def initial_postions():
     positions = {}
-    for y in range(1, 9):
-        for x in range(1, 9):
-            if y == 2:
+    for y in range(8):
+        for x in range(8):
+            if y == 1:
                 positions[(x, y)] = pawn(color="white", id=("pawn", x, y))
-            elif y == 7:
+            elif y == 6:
                 positions[(x, y)] = pawn(color="black", id=("pawn", x, y))
             # Pawns
-            elif y == 8:
-                if x == 1 or x == 8:
+            elif y == 7:
+                if x == 0 or x == 7:
                     positions[(x, y)] = rook(color="black", id=("rook", x, y))
-                elif x == 2 or x == 7:
+                elif x == 1 or x == 6:
                     positions[(x, y)] = knigth(color="black", id=("knigth", x, y))
-                elif x == 3 or x == 6:
+                elif x == 2 or x == 5:
                     positions[(x, y)] = bishop(color="black", id=("bishop", x, y))
-                elif x == 4:
+                elif x == 3:
                     positions[(x, y)] = queen(color="black", id=("queen", x, y))
                 else:
                     positions[(x, y)] = king(color="black", id=("king", x, y))
             # ---------------------
-            elif y == 1:
-                if x == 1 or x == 8:
+            elif y == 0:
+                if x == 0 or x == 7:
                     positions[(x, y)] = rook(color="white", id=("rook", x, y))
                 # Knigths
 
-                elif x == 2 or x == 7:
+                elif x == 1 or x == 6:
                     positions[(x, y)] = knigth(color="white", id=("knigth", x, y))
                 # bishops
 
-                elif x == 3 or x == 6:
+                elif x == 2 or x == 5:
                     positions[(x, y)] = bishop(color="white", id=("bishop", x, y))
-                elif x == 4:
+                elif x == 3:
                     positions[(x, y)] = queen(color="white", id=("queen", x, y))
                 else:
                     positions[(x, y)] = king(color="white", id=("king", x, y))
