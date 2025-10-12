@@ -25,19 +25,21 @@ class board:
         print()
 
     def move_piece(self, piece, position, board):
-        print(piece.position)
-        print(piece.relative_moves(board))
+        print(f"Current position: {piece.position}")
+        print(f"Possible moves: {piece.relative_moves(board)}")
+        
         if position in piece.relative_moves(board):
+            # Actualizar el diccionario de posiciones
             self.positions[position] = piece
             self.positions[piece.position] = None
+            
+            # Actualizar la posición de la pieza
+            _, x, y = piece.id
+            piece.position = position
+            piece.id = (piece.id[0], position[0], position[1])
         else:
-            print("nah", piece.relative_moves(board))
-            raise ValueError
-
-    def update_position(self):
-        for i in self.positions.values():
-            ...
-
+            print(f"Invalid move. Valid moves are: {piece.relative_moves(board)}")
+            raise ValueError("Invalid move")
 
 # this class is able to have 2 possible states
 # 1. store a object from the class piece
@@ -92,31 +94,27 @@ class pawn(piece):
 
         if self.color == "white":
             # avanzar
-            if not tablero.positions[(x, y + 1)]:
+            if 1 <= y + 1 <= 8 and not tablero.positions[(x, y + 1)]:
                 moves.append((x, y + 1))
             # capturar
-            if not tablero.positions[(x + 1, y + 1)]:
-                pass
-            elif tablero.positions[(x + 1, y + 1)].color != self.color:
-                moves.append((x + 1, y + 1))
-            if not tablero.positions[(x - 1, y + 1)]:
-                pass
-            elif tablero.positions[(x - 1, y + 1)].color != self.color:
-                moves.append((x - 1, y + 1))
+            if 1 <= x + 1 <= 8 and 1 <= y + 1 <= 8:
+                if tablero.positions.get((x + 1, y + 1)) and tablero.positions[(x + 1, y + 1)].color != self.color:
+                    moves.append((x + 1, y + 1))
+            if 1 <= x - 1 <= 8 and 1 <= y + 1 <= 8:
+                if tablero.positions.get((x - 1, y + 1)) and tablero.positions[(x - 1, y + 1)].color != self.color:
+                    moves.append((x - 1, y + 1))
+    
         elif self.color == "black":
-            #avanzar
-            if not tablero.positions[(x, y - 1)]:
-                moves.append((x, y-1))
+            # avanzar
+            if 1 <= y - 1 <= 8 and not tablero.positions[(x, y - 1)]:
+                moves.append((x, y - 1))
             # capturar
-            if not tablero.positions[(x + 1, y - 1)]:
-                pass
-            elif tablero.positions[(x + 1, y - 1)].color != self.color:
-                moves.append(tablero.positions[(x + 1, y - 1)].position)
-            #otro capturar
-            if not tablero.positions[(x - 1, y - 1)]:
-                pass
-            elif tablero.positions[(x + 1, y - 1)].color != self.color:
-                moves.append(tablero.positions[(x - 1, y - 1)].position)
+            if 1 <= x + 1 <= 8 and 1 <= y - 1 <= 8:
+                if tablero.positions.get((x + 1, y - 1)) and tablero.positions[(x + 1, y - 1)].color != self.color:
+                    moves.append((x + 1, y - 1))
+            if 1 <= x - 1 <= 8 and 1 <= y - 1 <= 8:
+                if tablero.positions.get((x - 1, y - 1)) and tablero.positions[(x - 1, y - 1)].color != self.color:
+                    moves.append((x - 1, y - 1))
 
         return moves
 
